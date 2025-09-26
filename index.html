@@ -2,52 +2,135 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Onglet Magique</title>
+  <title>Onglet Magique – Gestion de Projets</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      height: 100vh;
     }
-    #panel {
-      display: none;
-      background: #f9f9f9;
-      border: 1px solid #ccc;
-      padding: 15px;
-      width: 350px;
-      box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    #sidebar {
+      width: 300px;
+      background-color: #f4f4f4;
+      padding: 20px;
+      border-right: 1px solid #ccc;
+      overflow-y: auto;
+    }
+    #main {
+      flex: 1;
+      padding: 30px;
     }
     .project {
       margin-bottom: 15px;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+    }
+    .project:hover {
+      background-color: #eaeaea;
+    }
+    .description {
+      font-size: 0.9em;
+      color: #666;
+    }
+    #details {
+      margin-top: 20px;
+    }
+    #addForm {
+      margin-top: 30px;
+    }
+    input, textarea {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 1em;
     }
     button {
-      margin-top: 5px;
+      padding: 8px 12px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .actions {
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>🧠 Onglet Magique</h1>
-  <button onclick="togglePanel()">Afficher les projets</button>
+  <div id="sidebar">
+    <h2>📁 Projets</h2>
+    <div id="projectList"></div>
+    <hr>
+    <h3>➕ Ajouter un projet</h3>
+    <form id="addForm">
+      <input type="text" id="projectName" placeholder="Nom du projet" required>
+      <input type="text" id="projectDesc" placeholder="Description courte" required>
+      <textarea id="projectSynth" placeholder="Synthèse détaillée" required></textarea>
+      <button type="submit">Ajouter</button>
+    </form>
+  </div>
 
-  <div id="panel">
-    <div class="project">
-      <strong>#P1023 – Migration serveur</strong><br>
-      <button onclick="showSummary('Serveur migré à 80%, tests en cours.')">Voir synthèse</button>
-    </div>
-    <div class="project">
-      <strong>#P1045 – Audit sécurité</strong><br>
-      <button onclick="showSummary('Audit terminé, rapport en rédaction.')">Voir synthèse</button>
-    </div>
+  <div id="main">
+    <h2>Détails du projet</h2>
+    <div id="details">Clique sur un projet pour voir sa synthèse.</div>
   </div>
 
   <script>
-    function togglePanel() {
-      const panel = document.getElementById('panel');
-      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    let projects = [];
+
+    function renderProjects() {
+      const list = document.getElementById('projectList');
+      list.innerHTML = '';
+      projects.forEach((proj, index) => {
+        const div = document.createElement('div');
+        div.className = 'project';
+        div.innerHTML = `<strong>${proj.name}</strong><br><span class="description">${proj.desc}</span>`;
+        div.onclick = () => showDetails(index);
+        list.appendChild(div);
+      });
     }
 
-    function showSummary(text) {
-      alert("Synthèse : " + text);
+    function showDetails(index) {
+      const proj = projects[index];
+      const details = document.getElementById('details');
+      details.innerHTML = `
+        <h3>${proj.name}</h3>
+        <p><em>${proj.desc}</em></p>
+        <p>${proj.synth}</p>
+        <div class="actions">
+          <button onclick="editProject(${index})">Modifier</button>
+          <button onclick="deleteProject(${index})">Supprimer</button>
+        </div>
+      `;
     }
+
+    function editProject(index) {
+      const proj = projects[index];
+      document.getElementById('projectName').value = proj.name;
+      document.getElementById('projectDesc').value = proj.desc;
+      document.getElementById('projectSynth').value = proj.synth;
+      deleteProject(index);
+    }
+
+    function deleteProject(index) {
+      projects.splice(index, 1);
+      renderProjects();
+      document.getElementById('details').innerHTML = 'Projet supprimé.';
+    }
+
+    document.getElementById('addForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('projectName').value;
+      const desc = document.getElementById('projectDesc').value;
+      const synth = document.getElementById('projectSynth').value;
+      projects.push({ name, desc, synth });
+      renderProjects();
+      this.reset();
+    });
+
+    renderProjects();
   </script>
 </body>
 </html>
