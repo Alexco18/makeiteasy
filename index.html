@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Onglet Magique</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    #panel {
+      display: none;
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      padding: 15px;
+      width: 350px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    }
+    .project {
+      margin-bottom: 15px;
+    }
+    button {
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧠 Onglet Magique</h1>
+  <button onclick="togglePanel()">Afficher les projets</button>
+
+  <div id="panel">
+    <div class="project">
+      <strong>#P1023 – Migration serveur</strong><br>
+      <button onclick="showSummary('Serveur migré à 80%, tests en cours.')">Voir synthèse</button>
+    </div>
+    <div class="project">
+      <strong>#P1045 – Audit sécurité</strong><br>
+      <button onclick="showSummary('Audit terminé, rapport en rédaction.')">Voir synthèse</button>
+    </div>
+  </div>
+
+  <script>
+    function togglePanel() {
+      const panel = document.getElementById('panel');
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function showSummary(text) {
+      alert("Synthèse : " + text);
+    }
+  </script>
+</body>
+</html>
